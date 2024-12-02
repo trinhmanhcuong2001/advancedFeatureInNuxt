@@ -5,9 +5,7 @@ const { data } = await useFetch("/api/posts", {
         Accept: "application/json",
     },
     transform(payload) {
-        return Array.isArray(payload)
-            ? payload.map((post) => ({ ...post, fetchedAt: new Date() }))
-            : { ...payload, fetchedAt: new Date() };
+        return { ...payload, fetchedAt: new Date() };
     },
     getCachedData(key) {
         const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
