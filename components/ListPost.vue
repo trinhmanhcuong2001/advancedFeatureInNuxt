@@ -5,10 +5,9 @@ const { data } = await useFetch("/api/posts", {
         Accept: "application/json",
     },
     transform(payload) {
-        return {
-            ...payload,
-            fetchedAt: new Date(),
-        };
+        return Array.isArray(payload)
+            ? payload.map((post) => ({ ...post, fetchedAt: new Date() }))
+            : { ...payload, fetchedAt: new Date() };
     },
     getCachedData(key) {
         const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
@@ -32,7 +31,9 @@ const { data } = await useFetch("/api/posts", {
     <div class="">
         <h1>List Posts</h1>
         <ul>
-            <li v-for="post in data">{{ post.id }} - {{ post.title }}</li>
+            <li v-for="post in data" :key="post.id">
+                {{ post.id }} - {{ post.title }}
+            </li>
         </ul>
     </div>
 </template>
